@@ -54,20 +54,6 @@ long measureDistance(int trigger, int echo) {
   return entfernung;
 }
 
-void printDistance(long entfernung, char ch) {
-  if (entfernung >= 500 || entfernung <= 0) {
-    Serial.print(ch);
-    Serial.print(" = ");
-    Serial.println("Kein Messwert");
-  } else {
-    Serial.print(ch);
-    Serial.print(" = ");
-    Serial.print(entfernung);
-    Serial.println("cm");
-  }
-}
-
-
 void setup() {
   mySerial.begin(9600);  //38400 für hc-05
 
@@ -93,14 +79,9 @@ void setup() {
 }
 
 void reverse() {
-
-  Serial.print("Stoppen...");
   analogWrite(speed1, 0);
   analogWrite(speed2, 0);
   int richtung = (entfernungRechts > entfernungLinks);
-
-  //delay(250);
-  Serial.print("Rueckwaerts...");
 
   digitalWrite(motor1pin1, HIGH);
   digitalWrite(motor1pin2, LOW);
@@ -111,7 +92,6 @@ void reverse() {
   analogWrite(speed2, 150);
 
   delay(900);
-  Serial.print("Vorwaerts...");
 
   analogWrite(speed1, speedRechts);
   analogWrite(speed2, speedLinks);
@@ -122,46 +102,16 @@ void reverse() {
   digitalWrite(motor2pin2, HIGH);
 
   if (richtung) {
-    Serial.print("Rechts...");
 
     analogWrite(speed1, 0);
     analogWrite(speed2, 150);
   } else {
-    Serial.print("Links...");
 
     analogWrite(speed1, 150);
     analogWrite(speed2, 0);
   }
 
   delay(500);
-  Serial.print("Ende...");
-  Serial.println("");
-}
-
-void detect() {
-  entfernungVorne = measureDistance(triggerVorne, echoC) - errorMargin;
-  entfernungRechts = measureDistance(triggerRechts, echoA);
-  entfernungLinks = measureDistance(triggerLinks, echoB);
-
-  if (entfernungRechts <= 20) {
-    mySerial.print("r");
-  } else {
-    mySerial.print("z");
-  }
-  if (entfernungLinks <= 20) {
-    mySerial.print("l");
-  } else {
-    mySerial.print("y");
-  }
-
-  if (entfernungVorne <= 20) {
-    mySerial.print("v");
-  } else {
-    mySerial.print("x");
-  }
-  analogWrite(speed1, speedLinks);
-  analogWrite(speed2, speedRechts);
-  delay(100);
 }
 
 void forward() {
